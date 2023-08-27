@@ -28,7 +28,7 @@ public class XposedHook implements IXposedHookLoadPackage {
 
     @SuppressLint("StaticFieldLeak")
     private static Service service;
-    public static ClassLoader classLoader;
+    private static ClassLoader classLoader;
     private static PowerManager.WakeLock wakeLock;
     public static Handler handler;
     private static Runnable runnable;

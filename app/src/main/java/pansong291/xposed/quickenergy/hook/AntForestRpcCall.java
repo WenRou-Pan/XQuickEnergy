@@ -36,12 +36,10 @@ public class AntForestRpcCall {
     public static String collectEnergy(String bizType, String userId, long bubbleId) {
         String args1;
         if (StringUtil.isEmpty(bizType)) {
-            args1 = "[{\"bizType\":\"\",\"bubbleIds\":[" + bubbleId
-                    + "],\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"userId\":\"" + userId + "\",\"version\":\""
-                    + VERSION + "\"}]";
+            args1 = "[{\"bubbleIds\":[" + bubbleId + "],\"userId\":\"" + userId + "\"}]";
         } else {
-            args1 = "[{\"bizType\":\"" + bizType + "\",\"bubbleIds\":[" + bubbleId
-                    + "],\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"userId\":\"" + userId + "\"}]";
+            args1 = "[{\"bizType\":\"" + bizType + "\",\"bubbleIds\":[" + bubbleId + "],\"userId\":\"" + userId
+                    + "\"}]";
         }
         return RpcUtil.request("alipay.antmember.forest.h5.collectEnergy", args1);
     }
@@ -70,7 +68,7 @@ public class AntForestRpcCall {
     }
 
     public static String queryEnergyRainHome() {
-        return RpcUtil.request("alipay.antforest.forest.h5.queryEnergyRainHome", "[{\"version\":\"" + VERSION + "\"}]");
+        return RpcUtil.request("alipay.antforest.forest.h5.queryEnergyRainHome", "[{}]");
     }
 
     public static String queryEnergyRainCanGrantList() {
@@ -83,13 +81,12 @@ public class AntForestRpcCall {
     }
 
     public static String startEnergyRain() {
-        return RpcUtil.request("alipay.antforest.forest.h5.startEnergyRain", "[{\"version\":\"" + VERSION + "\"}]");
+        return RpcUtil.request("alipay.antforest.forest.h5.startEnergyRain", "[{}]");
     }
 
     public static String energyRainSettlement(int saveEnergy, String token) {
         return RpcUtil.request("alipay.antforest.forest.h5.energyRainSettlement",
-                "[{\"activityPropNums\":0,\"saveEnergy\":" + saveEnergy + ",\"token\":\"" + token + "\",\"version\":\""
-                        + VERSION + "\"}]");
+                "[{\"activityPropNums\":0,\"saveEnergy\":" + saveEnergy + ",\"token\":\"" + token + "\"}]");
     }
 
     public static String receiveTaskAward(String sceneCode, String taskType) {
@@ -266,12 +263,5 @@ public class AntForestRpcCall {
         return RpcUtil.request("alipay.antforest.forest.h5.protectBubble",
                 "[{\"source\":\"ANT_FOREST_H5\",\"targetUserId\":\"" + targetUserId + "\",\"version\":\"" + VERSION
                         + "\"}]");
-    }
-
-    /* 森林礼盒 */
-    public static String collectFriendGiftBox(String targetId, String targetUserId) {
-        return RpcUtil.request("alipay.antforest.forest.h5.collectFriendGiftBox",
-                "[{\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"targetId\":\"" + targetId
-                        + "\",\"targetUserId\":\"" + targetUserId + "\"}]");
     }
 }

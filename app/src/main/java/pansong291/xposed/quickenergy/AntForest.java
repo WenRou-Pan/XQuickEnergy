@@ -250,8 +250,7 @@ public class AntForest {
     }
 
     private static void queryEnergyRanking() {
-        if (!Config.collectEnergy() && !(Config.helpFriendCollect() && Statistics.canProtectBubbleToday(selfId)
-                && TimeUtil.getTimeStr().compareTo("0800") > 0)) {
+        if (!Config.collectEnergy()) {
             return;
         }
         try {
@@ -277,9 +276,6 @@ public class AntForest {
             } else {
                 Log.recordLog(jo.getString("resultDesc"), s);
             }
-            if (Config.helpFriendCollect() && Statistics.canProtectBubbleToday(selfId)
-                    && TimeUtil.getTimeStr().compareTo("0800") > 0)
-                Statistics.protectBubbleToday(selfId);
         } catch (Throwable t) {
             Log.i(TAG, "queryEnergyRanking err:");
             Log.printStackTrace(TAG, t);
@@ -295,16 +291,13 @@ public class AntForest {
             boolean optBoolean = jo.getBoolean("canCollectEnergy") || (jo.getLong("canCollectLaterTime") > 0
                     && jo.getLong("canCollectLaterTime") - System.currentTimeMillis() < Config.checkInterval());
             String userId = jo.getString("userId");
-            if (Config.collectEnergy() && optBoolean && !userId.equals(selfId)) {
+            if (optBoolean && !userId.equals(selfId)) {
                 canCollectEnergy(userId, true);
+            } else {
+                FriendIdMap.getNameById(userId);
             }
             if (Config.helpFriendCollect() && jo.getBoolean("canProtectBubble") && restTimes > 0) {
                 restTimes = protectBubble(userId);
-                if (restTimes == 0)
-                    Statistics.protectBubbleToday(selfId);
-            }
-            if (Config.collectGiftBox() && jo.getBoolean("canCollectGiftBox")) {
-                collectFriendGiftBox(userId);
             }
         }
     }
@@ -428,7 +421,7 @@ public class AntForest {
                             String propName = jo.getJSONObject("propConfig").getString("propName");
                             jo = new JSONObject(AntForestRpcCall.collectProp(giveConfigId, giveId));
                             if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                                Log.forest("领取道具🎭[" + propName + "]");
+                                Log.forest("领取道具🎭[" + propName + "g]");
                             } else {
                                 Log.recordLog("领取道具失败:" + jo.getString("resultDesc"), jo.toString());
                             }
@@ -526,6 +519,7 @@ public class AntForest {
                     }
                 }
                 int collected = 0;
+                int helped = 0;
                 for (int i = 0; i < jaBubbles.length(); i++) {
                     JSONObject bubble = jaBubbles.getJSONObject(i);
                     long bubbleId = bubble.getLong("id");
@@ -585,7 +579,7 @@ public class AntForest {
                                         totalHelpCollected += fullEnergy;
                                         Statistics.addData(Statistics.DataType.HELPED, fullEnergy);
                                     } else {
-                                        Log.recordLog(joProtect.getString("resultDesc"), joProtect.toString());
+                                        Log.recordLog(jo.getString("resultDesc"), s);
                                     }
                                 }
                             }
@@ -601,37 +595,6 @@ public class AntForest {
             Log.printStackTrace(TAG, t);
         }
         return restTimes;
-    }
-
-    private static void collectFriendGiftBox(String userId) {
-        try {
-            String s = AntForestRpcCall.queryFriendHomePage(userId);
-            JSONObject jo = new JSONObject(s);
-            if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                JSONArray giftBoxList = jo.getJSONObject("giftBoxInfo").optJSONArray("giftBoxList");
-                if (giftBoxList != null && giftBoxList.length() > 0) {
-                    for (int i = 0; i < giftBoxList.length(); i++) {
-                        JSONObject giftBox = giftBoxList.getJSONObject(i);
-                        String giftBoxId = giftBox.getString("giftBoxId");
-                        String title = giftBox.getString("title");
-                        jo = new JSONObject(AntForestRpcCall.collectFriendGiftBox(giftBoxId, userId));
-                        if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                            int energy = jo.optInt("energy", 0);
-                            Log.forest("收取礼盒🎁[" + FriendIdMap.getNameById(userId) + "-" + title + "]#" + energy + "g");
-                            collectedEnergy += energy;
-                            Statistics.addData(Statistics.DataType.COLLECTED, energy);
-                        } else {
-                            Log.recordLog(jo.getString("resultDesc"), jo.toString());
-                        }
-                    }
-                }
-            } else {
-                Log.recordLog(jo.getString("resultDesc"), s);
-            }
-        } catch (Throwable t) {
-            Log.i(TAG, "collectFriendGiftBox err:");
-            Log.printStackTrace(TAG, t);
-        }
     }
 
     private static int collectEnergy(String userId, long bubbleId, String bizNo) {
