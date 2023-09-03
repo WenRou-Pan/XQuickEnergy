@@ -102,7 +102,6 @@ public class AntForestNotification {
 //        Notification.BigTextStyle style = new Notification.BigTextStyle();
 //        style.bigText(preContent + contentText);
         Notification.InboxStyle style = new Notification.InboxStyle();
-        style.addLine(preContent);
         style.addLine(contentText);
         builder.setStyle(style);
 
