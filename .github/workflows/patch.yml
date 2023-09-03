@@ -4,6 +4,8 @@ on:
   watch:
     types: [started]
 
+  workflow_dispatch: 
+
 jobs:
   android:
     permissions:
