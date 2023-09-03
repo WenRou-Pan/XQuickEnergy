@@ -1,7 +1,11 @@
 name: Android CI
 
-on:
-  workflow_dispatch:
+#on:
+#  push:
+#    branches: [ "patch" ]
+#  pull_request:
+#    branches: [ "patch" ]
+
 jobs:
   android:
     permissions:
