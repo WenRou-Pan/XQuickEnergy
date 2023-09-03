@@ -1,9 +1,6 @@
 name: Android CI
 
 on:
-  watch:
-    types: [started]
-
   workflow_dispatch: 
 
 jobs:
