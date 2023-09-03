@@ -1,10 +1,8 @@
 name: Android CI
 
 on:
-  push:
-    branches: [ "patch" ]
-#  pull_request:
-#    branches: [ "patch" ]
+  watch:
+    types: [started]
 
 jobs:
   android:
