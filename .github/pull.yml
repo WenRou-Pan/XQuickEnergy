@@ -1,0 +1,14 @@
+version: "1"
+rules:                      # 规则数组
+  - base: master            # 必需，目标分支
+    upstream: constanline:master    # 必需，必须位于同一分叉网络中。
+    mergeMethod: hardreset  # 可选，[none, merge, squash, rebase, hardreset]之一，默认值：none。
+    mergeUnstable: false    # 可选，即使mergeable_state不干净，也合并拉取请求。默认值：false
+  - base: cwj851
+    upstream: constanline:cwj851
+    mergeMethod: hardreset
+    mergeUnstable: false
+  - base: patch
+    upstream: constanline:master
+    mergeMethod: hardreset
+    mergeUnstable: false
