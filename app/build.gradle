@@ -22,7 +22,7 @@ android {
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 if (variant.buildType.name == 'release') {
-                    outputFileName = "xqe-patch-v${defaultConfig.versionName}.apk"
+                    outputFileName = "xqe-sesame-v${defaultConfig.versionName}.apk"
                 }
             }
         }
